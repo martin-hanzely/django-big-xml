@@ -2,6 +2,7 @@ from __future__ import annotations
 from uuid import uuid4
 
 from django.db import models
+from django.urls import reverse_lazy
 
 
 def get_token() -> str:
@@ -34,3 +35,12 @@ class XMLExport(models.Model):
             models.Index(fields=["token"], name="xml_export_token_idx"),
             models.Index(fields=["created_at"], name="xml_export_created_at_idx"),
         ]
+
+    def get_admin_url(self) -> str:
+        """
+        Returns URL to object admin change form.
+        """
+        return reverse_lazy(
+            f"admin:{self._meta.app_label}_{self._meta.model_name}_change",
+            kwargs={"object_id": self.pk}
+        )
