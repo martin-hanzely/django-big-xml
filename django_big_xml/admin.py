@@ -1,6 +1,11 @@
 from django.contrib import admin
 
-from django_big_xml.models import XMLExport
+from django_big_xml.models import Item, XMLExport
+
+
+@admin.register(Item)
+class ItemAdmin(admin.ModelAdmin):
+    list_display = ("pk", "name", "created_at")
 
 
 @admin.register(XMLExport)

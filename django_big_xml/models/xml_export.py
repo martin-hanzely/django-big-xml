@@ -12,12 +12,20 @@ def file_upload_path(instance: XMLExport, filename: str) -> str:
     return f"exports/xml/{filename}"
 
 
+class XMLExportManager(models.Manager):
+
+    def last_successful(self) -> XMLExport:
+        return self.filter(is_successful=True).last()
+
+
 class XMLExport(models.Model):
     token = models.UUIDField(default=get_token, editable=False, unique=True)
     file = models.FileField(upload_to=file_upload_path, null=True, blank=True)
     compressed_file = models.FileField(upload_to=file_upload_path, null=True, blank=True)
     is_successful = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
+
+    objects = XMLExportManager()
 
     class Meta:
         ordering = ["-pk"]
